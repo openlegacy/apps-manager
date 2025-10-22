@@ -46,8 +46,42 @@ services:
       - config.env
     restart: unless-stopped
 
+  hub-enterprise:
+    image: openlegacy/hub-enterprise-light:latest
+    container_name: ol-hub-light
+    ports:
+      - "8084:8080"
+    environment:
+      - EXTERNAL_DB=true
+      - OL_DB_PORT=5432
+      - OL_DB_HOST=hub-postgres
+      - OL_DB_USER=postgres
+      - OL_DB_PASSWORD=olhubpassword
+      - OL_DB_NAME=olhub
+      - OL_DB_POOL_SIZE=10
+    depends_on:
+      - hub-postgres
+    restart: unless-stopped
+    profiles:
+      - all
+
+  hub-postgres:
+    image: postgres:15-alpine
+    container_name: hub-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=olhubpassword
+      - POSTGRES_DB=olhub
+    volumes:
+      - hub-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    profiles:
+      - all
+
 volumes:
   ol-terminal-data:
   ol-code-data:
   sqol-data:
+  hub-enterprise-data:
+  hub-postgres-data:
 
