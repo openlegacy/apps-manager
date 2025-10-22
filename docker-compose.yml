@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  homepage:
+    image: nginx:alpine
+    container_name: ol-homepage
+    ports:
+      - "8080:80"
+    volumes:
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+    restart: unless-stopped
+
+  ol-terminal:
+    image: public.ecr.aws/openlegacy/ol-tools/ol-terminal:latest
+    container_name: ol-terminal
+    user: "0:0"
+    ports:
+      - "8081:8080"
+    volumes:
+      - ol-terminal-data:/usr/app/.ol-terminal
+    env_file:
+      - config.env
+    restart: unless-stopped
+
+  ol-code:
+    image: public.ecr.aws/openlegacy/ol-tools/ol-code:latest
+    container_name: ol-code
+    user: "0:0"
+    ports:
+      - "8082:8080"
+    volumes:
+      - ol-code-data:/usr/app/.olcode
+    env_file:
+      - config.env
+    restart: unless-stopped
+
+  sqol:
+    image: public.ecr.aws/openlegacy/ol-tools/sqol:latest
+    container_name: sqol
+    user: "0:0"
+    ports:
+      - "8083:8080"
+    volumes:
+      - sqol-data:/usr/app/.sqol
+    env_file:
+      - config.env
+    restart: unless-stopped
+
+volumes:
+  ol-terminal-data:
+  ol-code-data:
+  sqol-data:
+

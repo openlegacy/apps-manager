@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenLegacy Tools</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .apps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .app-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .app-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .app-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #667eea;
+        }
+        
+        .app-description {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 OpenLegacy Tools</h1>
+        
+        <div class="apps-grid">
+            <a href="http://localhost:8081" class="app-card" target="_blank">
+                <div class="app-icon">💻</div>
+                <div class="app-name">OL Terminal</div>
+                <div class="app-description">Terminal-based OpenLegacy development environment</div>
+            </a>
+            
+            <a href="http://localhost:8082" class="app-card" target="_blank">
+                <div class="app-icon">⚡</div>
+                <div class="app-name">OL Code</div>
+                <div class="app-description">Code editor and development tools for OpenLegacy</div>
+            </a>
+            
+            <a href="http://localhost:8083" class="app-card" target="_blank">
+                <div class="app-icon">🗄️</div>
+                <div class="app-name">SQOL</div>
+                <div class="app-description">SQL and data management interface</div>
+            </a>
+        </div>
+        
+        <div class="footer">
+            OpenLegacy Development Environment
+        </div>
+    </div>
+</body>
+</html>
+
