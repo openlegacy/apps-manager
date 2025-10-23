@@ -1,0 +1,18 @@
+connectionProperties:
+  mfhostAddress: ""
+  mfport: "6800"
+  as400hostAddress: ""
+  connectionType: "Mainframe"
+  defaultFilter: ""
+generalSettings:
+  hubUrl: "http://ol-hub:8080"
+  hubApiKey: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJlZTVmNTAyOS02NmE1LTQ1ZDItOGIxOS00ODU1OTUzYzBmNjkiLCJ0aWQiOiI0YTZiZmM1ZC0zYmFlLTQ1YTMtOTliOS1kMWUyNTU4NzVhZGIiLCJodHRwczovL29sLnRlbmFudHMvcmVnaW9uIjoiRVUiLCJpYXQiOjE3MTI1NzUxODgsImlzcyI6Im9sIiwic3ViIjoiOWE3ODBlOGItYmE5OC00ZjBjLTg0MjQtNGU0Y2MyN2IxZjY3In0.a1T5KHdofMrrvy0b-LE1qL2i-h1slojJjnwOUPAgWXFFPas5Iz6phj-eTnNfKBy0r61xwRe0ghg5_yEh6wzhthImf_eAWtr3AOuz4TdCfp-2zomQyt2Mcrh_5_NGlkc1MV6ZwkSFfXtFuofN0bC3JSNS5-IHrn90znI_2zsen4q-JzoZzWcSa14d5BcZRqAju2m9v1SaVUp2Mro-mf2HAYIu4NNzU5_PrCstmjiRH8dvqljlesK602UtDFM8wLIkNbJmJ0jmUyGzNFNL4p3uefZrtM2ifoJWr1RO5xhkDANZXE62PN1ZZROR_V0cz6jxFcxWh3PcSGYcG01IwRH3mA"
+  terminalUrl: ""
+  mockServerEnabled: false
+admin:
+  username: "openlegacy"
+  password: "olpassword"
+aiSettings:
+  aiModel: ""
+  aiApiKey: ""
+  aiBaseUrl: ""

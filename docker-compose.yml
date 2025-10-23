@@ -8,6 +8,8 @@ services:
       - "8080:80"
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html:ro
+    networks:
+      - app-network
     restart: unless-stopped
 
   ol-terminal:
@@ -20,6 +22,8 @@ services:
       - ./.ol-terminal:/usr/app/.ol-terminal
     env_file:
       - config.env
+    networks:
+      - app-network
     restart: unless-stopped
 
   ol-code:
@@ -29,9 +33,11 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ./.olcode:/usr/app/.olcode
+      - ./.olcode:/usr/app/.ol-code
     env_file:
       - config.env
+    networks:
+      - app-network
     restart: unless-stopped
 
   sqol:
@@ -44,13 +50,15 @@ services:
       - ./.sqol:/usr/app/.sqol
     env_file:
       - config.env
+    networks:
+      - app-network
     restart: unless-stopped
 
   ol-hub:
     image: openlegacy/hub-enterprise-light:latest
     container_name: ol-hub
     ports:
-      - "8084:80"
+      - "8084:8080"
     environment:
       - EXTERNAL_DB=true
       - OL_DB_PORT=5432
@@ -63,6 +71,8 @@ services:
       - config.env
     depends_on:
       - hub-postgres
+    networks:
+      - app-network
     restart: unless-stopped
     profiles:
       - all
@@ -76,10 +86,16 @@ services:
       - POSTGRES_DB=olhub
     volumes:
       - hub-postgres-data:/var/lib/postgresql/data
+    networks:
+      - app-network
     restart: unless-stopped
     profiles:
       - all
 
 volumes:
   hub-postgres-data:
+
+networks:
+  app-network:
+    driver: bridge
 
