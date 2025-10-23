@@ -17,7 +17,7 @@ services:
     ports:
       - "8081:8080"
     volumes:
-      - ol-terminal-data:/usr/app/.ol-terminal
+      - ./.ol-terminal:/usr/app/.ol-terminal
     env_file:
       - config.env
     restart: unless-stopped
@@ -29,7 +29,7 @@ services:
     ports:
       - "8082:8080"
     volumes:
-      - ol-code-data:/usr/app/.olcode
+      - ./.olcode:/usr/app/.olcode
     env_file:
       - config.env
     restart: unless-stopped
@@ -41,16 +41,16 @@ services:
     ports:
       - "8083:8080"
     volumes:
-      - sqol-data:/usr/app/.sqol
+      - ./.sqol:/usr/app/.sqol
     env_file:
       - config.env
     restart: unless-stopped
 
-  hub-enterprise:
+  ol-hub:
     image: openlegacy/hub-enterprise-light:latest
-    container_name: ol-hub-light
+    container_name: ol-hub
     ports:
-      - "8084:8080"
+      - "8084:80"
     environment:
       - EXTERNAL_DB=true
       - OL_DB_PORT=5432
@@ -59,6 +59,8 @@ services:
       - OL_DB_PASSWORD=olhubpassword
       - OL_DB_NAME=olhub
       - OL_DB_POOL_SIZE=10
+    env_file:
+      - config.env
     depends_on:
       - hub-postgres
     restart: unless-stopped
@@ -79,9 +81,5 @@ services:
       - all
 
 volumes:
-  ol-terminal-data:
-  ol-code-data:
-  sqol-data:
-  hub-enterprise-data:
   hub-postgres-data:
 

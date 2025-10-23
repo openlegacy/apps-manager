@@ -1,0 +1,32 @@
+# OpenLegacy Apps - Configuration
+
+# Environment configuration with sensitive data
+config.env
+
+# App configuration directories (may contain sensitive data)
+# Uncomment these if your configurations contain credentials
+# .ol-terminal/
+# .olcode/
+# .sqol/
+
+# Or keep specific sensitive files ignored
+.**/logs/**/*.log
+.**/**/*.pem
+.**/**/*.key
+.ol-terminal/trails/**
+.ol-terminal/traffic/**
+
+# Docker
+.docker/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
