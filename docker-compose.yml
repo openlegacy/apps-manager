@@ -77,15 +77,36 @@ services:
     profiles:
       - all
 
+  ol-termiq:
+    image: public.ecr.aws/openlegacy/ol-tools/ol-termiq:latest
+    container_name: ol-termiq
+    user: "0:0"
+    ports:
+      - "8085:8080"
+    volumes:
+      - ./.termiq:/usr/app/.termiq
+    env_file:
+      - config.env
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - hub-postgres
+    profiles:
+      - all
+
   hub-postgres:
     image: postgres:15-alpine
     container_name: hub-postgres
+    ports:
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=olhubpassword
       - POSTGRES_DB=olhub
     volumes:
       - hub-postgres-data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
     networks:
       - app-network
     restart: unless-stopped

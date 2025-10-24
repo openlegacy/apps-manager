@@ -40,6 +40,7 @@ case "$1" in
     echo "sqol: http://localhost:8083"
     if [ "$WITH_HUB" = true ]; then
       echo "hub-enterprise: http://localhost:8084"
+      echo "ol-termiq: http://localhost:8085"
     fi
     ;;
   stop)

@@ -138,8 +138,9 @@
         
         .tool-links {
             display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 0.75rem;
+            align-items: flex-start;
         }
         
         .learn-more {
@@ -256,7 +257,8 @@
             <a href="/" class="logo">OpenLegacy Apps</a>
             <nav>
                 <ul>
-                    <li><a href="#apps">Apps</a></li>
+                    <li><a href="#apps">Community Apps</a></li>
+                    <li><a href="#enterprise">Enterprise Apps</a></li>
                     <li><a href="https://community.openlegacy.com" target="_blank">Community</a></li>
                     <li><a href="https://forum.community.openlegacy.com/" target="_blank">Forum</a></li>
                 </ul>
@@ -306,7 +308,7 @@
             </div>
         </div>
 
-        <h2 class="section-title" style="margin-top: 4rem;">Enterprise Apps</h2>
+        <h2 class="section-title" style="margin-top: 4rem;" id="enterprise">Enterprise Apps</h2>
         <p class="section-subtitle">
             Advanced tools for API management, integration, and strategic modernization planning.
         </p>
@@ -335,6 +337,18 @@
                     <a href="https://docs.planner.ol-hub.com/docs/getting-started-with-planner#/" class="docs-link" target="_blank">Documentation</a>
                 </div>
             </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon">📊</div>
+                <h3 class="tool-name">Termiq</h3>
+                <p class="tool-description">
+                    Terminal intelligence and analytics platform. Gain insights from mainframe and AS/400 screen interactions, user patterns, and system usage metrics.
+                </p>
+                <div class="tool-links">
+                    <a href="http://localhost:8085" class="learn-more" target="_blank">Open Termiq</a>
+                    <a href="http://localhost:8085/assets/help.html" class="docs-link" target="_blank">Documentation</a>
+                </div>
+            </div>
         </div>
 
         <!-- Hub Promo Section -->
@@ -353,6 +367,33 @@
             © 2025 OpenLegacy. All rights reserved.
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.tool-card');
+            
+            cards.forEach(card => {
+                // Get the main link URL from the "learn-more" link
+                const mainLink = card.querySelector('.learn-more');
+                if (mainLink) {
+                    const url = mainLink.getAttribute('href');
+                    
+                    // Make card clickable
+                    card.style.cursor = 'pointer';
+                    
+                    card.addEventListener('click', function(e) {
+                        // Don't navigate if clicking on the docs link
+                        if (e.target.closest('.docs-link')) {
+                            return;
+                        }
+                        
+                        // Open the main app URL
+                        window.open(url, '_blank');
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

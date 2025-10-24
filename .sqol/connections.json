@@ -1,0 +1,20 @@
+[
+    {
+        "id": "e6d0736e-f55d-4533-b18e-90d0e1643f93",
+        "name": "pg-hub",
+        "jdbcUrl": "jdbc:postgresql://hub-postgres:5432/olhub",
+        "username": "postgres",
+        "password": "{cipher}ZuGEC29l1rMMT8OC2vhsog==:yOEZl6bsmoN/RgVB+ey0tQ==",
+        "schema": "data_4a6bfc5d_3bae_45a3_99b9_d1e255875adb",
+        "validationQuery": ""
+    },
+    {
+        "id": "e7a7df86-12b9-4e36-b40a-e8fa553e0841",
+        "name": "pg-termiq",
+        "jdbcUrl": "jdbc:postgresql://hub-postgres:5432/termiq",
+        "username": "postgres",
+        "password": "{cipher}OhmYL5fYgzinwz9yQg/e+w==:BinaEFMhow/Ccsx9FeYGrQ==",
+        "schema": "",
+        "validationQuery": ""
+    }
+]
