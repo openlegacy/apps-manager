@@ -14,7 +14,8 @@ This setup includes:
 
 ### Enterprise Apps (Optional - requires `--all` flag)
 - **Hub Integration** (port 8084) - Enterprise platform for API management and legacy system integration
-- **PostgreSQL** (internal) - Database for Hub Enterprise data persistence
+- **OL TermIQ** (port 8085) - Terminal Intelligence for mainframe session recording, analysis, and automation
+- **PostgreSQL** (port 5432) - Database for Hub Enterprise and TermIQ data persistence
 
 ## 🚀 Quick Start
 
@@ -90,6 +91,8 @@ Open your browser and visit:
 
 If you started with `--all`:
 - **🏢 Hub Integration:** http://localhost:8084
+- **🎯 OL TermIQ:** http://localhost:8085
+- **🗄️ PostgreSQL:** localhost:5432 (user: postgres, password: olhubpassword)
 
 ## 🛠️ Managing Services
 
@@ -141,6 +144,9 @@ Configuration files are stored in local directories that you can edit directly:
 - `./.olcode/` - OL Code projects and settings
 - `./.sqol/` - SQOL connections and queries
 
+### Enterprise Apps - Local Directories (when using `--all`)
+- `./.termiq/` - TermIQ session recordings, configurations, and analysis data
+
 These directories are bind-mounted from your project folder, allowing you to:
 - Edit configuration files directly in your IDE
 - Version control your app configurations
@@ -164,10 +170,10 @@ rm -rf .ol-terminal .olcode .sqol
 ./apps.sh start
 ```
 
-**To delete all data including Hub:**
+**To delete all data including Hub and TermIQ:**
 ```bash
 docker-compose --profile all down -v  # ⚠️ This deletes PostgreSQL data!
-rm -rf .ol-terminal .olcode .sqol     # Remove local configurations
+rm -rf .ol-terminal .olcode .sqol .termiq     # Remove local configurations
 ```
 
 ## 🔧 Troubleshooting
@@ -193,7 +199,7 @@ rm -rf .ol-terminal .olcode .sqol
 
 ### Port Conflicts
 
-If ports 8080-8083 are already in use, you can modify the ports in `docker-compose.yml`:
+If ports 8080-8085 or 5432 are already in use, you can modify the ports in `docker-compose.yml`:
 
 ```yaml
 ports:
@@ -205,7 +211,7 @@ ports:
 If you previously ran the services with `docker run`, remove the old containers:
 
 ```bash
-docker rm -f ol-terminal ol-code sqol ol-homepage ol-hub-light hub-postgres
+docker rm -f ol-terminal ol-code sqol ol-homepage ol-hub ol-termiq hub-postgres
 ```
 
 Then start with docker-compose:
@@ -214,21 +220,37 @@ Then start with docker-compose:
 ./apps.sh start --all
 ```
 
-### Hub Enterprise Connection Issues
+### Hub Enterprise and TermIQ Connection Issues
 
-If Hub Enterprise fails to start or connect to the database:
+If Hub Enterprise or TermIQ fail to start or connect to the database:
 
 1. Check if PostgreSQL is running:
 ```bash
 docker ps | grep hub-postgres
 ```
 
-2. Check Hub logs for errors:
+2. Check the database initialization:
 ```bash
-docker logs ol-hub-light
+docker logs hub-postgres
 ```
 
-3. Restart Hub services:
+3. Verify databases were created:
+```bash
+docker exec -it hub-postgres psql -U postgres -c "\l"
+# Should show: olhub and termiq databases
+```
+
+4. Check Hub logs for errors:
+```bash
+docker logs ol-hub
+```
+
+5. Check TermIQ logs for errors:
+```bash
+docker logs ol-termiq
+```
+
+6. Restart Hub and TermIQ services:
 ```bash
 ./apps.sh restart --all
 ```
@@ -239,9 +261,11 @@ docker logs ol-hub-light
 - **`config.env`** - Environment variables (license, credentials)
 - **`apps.sh`** - Helper script for managing services
 - **`index.html`** - Homepage template
+- **`init-db.sql`** - PostgreSQL initialization script (creates olhub and termiq databases)
 - **`.ol-terminal/`** - OL Terminal configuration directory (created on first run)
 - **`.olcode/`** - OL Code configuration directory (created on first run)
 - **`.sqol/`** - SQOL configuration directory (created on first run)
+- **`.termiq/`** - TermIQ configuration directory (created on first run with `--all`)
 
 ### Pre-configuring Apps
 
@@ -254,19 +278,42 @@ You can pre-configure apps by creating these directories before first run. For e
 
 SQOL will use your pre-configured connections immediately!
 
+### Connecting to PostgreSQL
+
+When running with `--all`, PostgreSQL is available for direct connections:
+
+**Connection Details:**
+- **Host:** `localhost` (from host machine) or `hub-postgres` (from containers)
+- **Port:** `5432`
+- **Username:** `postgres`
+- **Password:** `olhubpassword`
+- **Databases:** `olhub`, `termiq`
+
+**Example connection strings:**
+```bash
+# Using psql from host machine
+psql -h localhost -p 5432 -U postgres -d olhub
+
+# From within containers
+psql -h hub-postgres -p 5432 -U postgres -d termiq
+
+# JDBC URL
+jdbc:postgresql://localhost:5432/olhub?user=postgres&password=olhubpassword
+```
+
 ### Inter-Container Communication
 
 Containers in Docker Compose can communicate with each other using **service names** as hostnames. This is important when apps need to connect to each other.
 
 **Important:** When referencing other containers from within a container, use:
-- **Service name**: Use the exact name from `docker-compose.yml` (e.g., `ol-hub-light`)
-- **Internal port**: `8080` (not the host-exposed ports like 8084)
+- **Service name**: Use the exact name from `docker-compose.yml` (e.g., `ol-hub`)
+- **Internal port**: `8080` (not the host-exposed ports like 8084, 8085)
 
 For example, in `.sqol/application.yaml`:
 ```yaml
 generalSettings:
-  hubUrl: http://ol-hub-light:8080   # ✅ Correct - uses service name and internal port
-  # NOT: http://localhost:8084        # ❌ Wrong - localhost refers to the container itself
+  hubUrl: http://ol-hub:8080   # ✅ Correct - uses service name and internal port
+  # NOT: http://localhost:8084  # ❌ Wrong - localhost refers to the container itself
 ```
 
 **Port Mapping Summary:**
@@ -276,21 +323,27 @@ generalSettings:
 | Your browser | OL Code | `http://localhost:8082` |
 | Your browser | SQOL | `http://localhost:8083` |
 | Your browser | Hub Integration | `http://localhost:8084` |
-| SQOL container | Hub container | `http://ol-hub-light:8080` |
-| OL Code container | Hub container | `http://ol-hub-light:8080` |
-| OL Terminal container | Hub container | `http://ol-hub-light:8080` |
+| Your browser | OL TermIQ | `http://localhost:8085` |
+| Your browser | PostgreSQL | `postgresql://localhost:5432` |
+| SQOL container | Hub container | `http://ol-hub:8080` |
+| OL Code container | Hub container | `http://ol-hub:8080` |
+| OL Terminal container | Hub container | `http://ol-hub:8080` |
+| TermIQ container | Hub container | `http://ol-hub:8080` |
+| Hub container | PostgreSQL | `postgresql://hub-postgres:5432/olhub` |
+| TermIQ container | PostgreSQL | `postgresql://hub-postgres:5432/termiq` |
 
 **Other service names you can use:**
 - `ol-terminal` or `http://ol-terminal:8080`
 - `ol-code` or `http://ol-code:8080`
 - `sqol` or `http://sqol:8080`
-- `ol-hub-light` or `http://ol-hub-light:8080`
+- `ol-hub` or `http://ol-hub:8080`
+- `ol-termiq` or `http://ol-termiq:8080`
 - `hub-postgres` or `postgresql://hub-postgres:5432`
 
 **Troubleshooting DNS issues:**
 If you get "UnknownHostException" or DNS resolution errors:
 1. Verify all containers are running: `docker ps`
-2. Check they're on the same network: `docker network inspect apps_default`
+2. Check they're on the same network: `docker network inspect apps_app-network`
 3. Restart the container having issues: `docker restart <container-name>`
 4. If still failing, restart all services: `./apps.sh restart --all`
 
@@ -324,14 +377,28 @@ docker-compose --profile all up -d
 - [Hub Integration Documentation](https://docs.ol-hub.com/docs/getting-started-with-openlegacy-hub)
 - [Hub Planner Documentation](https://docs.planner.ol-hub.com/docs/getting-started-with-planner)
 
-## 🏢 Hub Enterprise Features
+## 🏢 Hub Enterprise & TermIQ Features
 
-When running with `--all`, Hub Integration provides:
+When running with `--all`, you get access to enterprise features:
+
+### Hub Integration
 - **Automatic API Generation** - Transform legacy systems into modern REST APIs
 - **Legacy System Analysis** - Analyze and optimize mainframe processes
 - **Modernization Planning** - Create strategic modernization roadmaps with Hub Planner
 - **Centralized Security** - Enterprise-grade security and access control
 - **ETL & CDC** - Extract, Transform, Load and Change Data Capture workflows
+
+### OL TermIQ (Terminal Intelligence)
+- **Session Recording** - Capture and replay mainframe terminal sessions
+- **Transaction Analysis** - Analyze terminal workflows and identify optimization opportunities
+- **Automated Testing** - Create test scenarios from recorded sessions
+- **Process Mining** - Extract business process insights from terminal interactions
+- **Integration Testing** - Test API integrations against real terminal workflows
+
+### PostgreSQL Database
+- **olhub database** - Stores Hub Enterprise configuration, projects, and metadata
+- **termiq database** - Stores TermIQ session recordings, analysis data, and test scenarios
+- **External Access** - Available on port 5432 for direct database connections and backup/restore
 
 Learn more at: https://community.openlegacy.com/hub
 
