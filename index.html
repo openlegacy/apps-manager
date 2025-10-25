@@ -280,6 +280,7 @@
                 <div class="tool-links">
                     <a href="http://localhost:8081" class="learn-more" target="_blank">Open Terminal</a>
                     <a href="http://localhost:8081/help.html" class="docs-link" target="_blank">Documentation</a>
+                    <a href="http://localhost:8081/admin" class="docs-link" target="_blank">Admin</a>
                 </div>
             </div>
             
@@ -292,6 +293,7 @@
                 <div class="tool-links">
                     <a href="http://localhost:8082" class="learn-more" target="_blank">Open Code Editor</a>
                     <a href="http://localhost:8082/help" class="docs-link" target="_blank">Documentation</a>
+                    <a href="http://localhost:8082/admin" class="docs-link" target="_blank">Admin</a>
                 </div>
             </div>
             
@@ -304,6 +306,7 @@
                 <div class="tool-links">
                     <a href="http://localhost:8083" class="learn-more" target="_blank">Open Database Console</a>
                     <a href="http://localhost:8083/assets/help.html" class="docs-link" target="_blank">Documentation</a>
+                    <a href="http://localhost:8083/admin" class="docs-link" target="_blank">Admin</a>
                 </div>
             </div>
         </div>
@@ -382,8 +385,8 @@
                     card.style.cursor = 'pointer';
                     
                     card.addEventListener('click', function(e) {
-                        // Don't navigate if clicking on the docs link
-                        if (e.target.closest('.docs-link')) {
+                        // Don't navigate if clicking on any link - let the link handle it
+                        if (e.target.closest('.docs-link') || e.target.closest('.learn-more')) {
                             return;
                         }
                         
