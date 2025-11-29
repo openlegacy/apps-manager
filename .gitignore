@@ -31,3 +31,4 @@ config.env
 Thumbs.db
 
 .postgres-data/**
+.temp/**

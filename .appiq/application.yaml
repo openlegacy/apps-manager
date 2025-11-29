@@ -1,0 +1,21 @@
+langchain4j:
+  provider: openai
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY:}
+    model-name: claude-sonnet-4-5-20250929
+  openai:
+    api-key: ${OL_AI_API_KEY:}
+    model-name: gpt-5.1
+  mock:
+    enabled: ${MOCK_AI_ENABLED:false}
+    delay-seconds: ${MOCK_AI_DELAY_SECONDS:7}
+generator:
+  form-columns: 2
+  right-to-left: false
+hub:
+  hub-url: http://ol-hub:8080
+  hub-ui-url: http://ol-hub:8080
+  hub-api-key:
+deployment:
+  test-url: http://localhost:3000
+  test-backend-url: http://localhost:3000

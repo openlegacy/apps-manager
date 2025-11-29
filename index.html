@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OpenLegacy Apps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -11,17 +13,37 @@
             box-sizing: border-box;
         }
         
+        :root {
+            --ol-primary: #0066CC;
+            --ol-primary-dark: #0052A3;
+            --ol-primary-light: #3385D6;
+            --mdc-primary: #0066CC;
+            --mdc-primary-dark: #0052A3;
+            --mdc-primary-light: #3385D6;
+            --mdc-secondary: #424242;
+            --mdc-surface: #FFFFFF;
+            --mdc-background: #FAFAFA;
+            --mdc-on-surface: #212121;
+            --mdc-on-surface-variant: #757575;
+            --mdc-divider: rgba(0, 0, 0, 0.12);
+            --mdc-elevation-1: 0px 1px 3px 0px rgba(0, 0, 0, 0.12), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+            --mdc-elevation-2: 0px 2px 4px -1px rgba(0, 0, 0, 0.12), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+            --mdc-elevation-4: 0px 4px 5px -2px rgba(0, 0, 0, 0.12), 0px 7px 10px 1px rgba(0, 0, 0, 0.14), 0px 2px 16px 1px rgba(0, 0, 0, 0.12);
+            --mdc-elevation-8: 0px 8px 10px -4px rgba(0, 0, 0, 0.12), 0px 16px 24px 2px rgba(0, 0, 0, 0.14), 0px 6px 30px 5px rgba(0, 0, 0, 0.12);
+        }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--mdc-background);
+            color: var(--mdc-on-surface);
+            line-height: 1.5;
         }
         
         /* Header */
         header {
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 1rem 0;
+            background-color: var(--mdc-surface);
+            box-shadow: var(--mdc-elevation-2);
+            padding: 0.5rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -30,209 +52,358 @@
         .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0066cc;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             text-decoration: none;
+            color: var(--ol-primary);
+        }
+        
+        .logo img {
+            height: 32px;
+            width: auto;
+        }
+        
+        .logo-text {
+            font-size: 1.125rem;
+            font-weight: 500;
+            letter-spacing: 0.15px;
+            color: var(--ol-primary);
         }
         
         nav ul {
             display: flex;
             list-style: none;
-            gap: 2rem;
+            gap: 1rem;
         }
         
         nav a {
-            color: #333;
+            color: var(--mdc-on-surface);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.3s;
+            font-size: 0.8125rem;
+            letter-spacing: 0.1px;
+            transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0.25rem 0;
         }
         
         nav a:hover {
-            color: #0066cc;
+            color: var(--ol-primary);
         }
         
         /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 3rem 2rem 4rem;
+            padding: 1rem 1rem 1.5rem;
         }
         
         .section-title {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: #222;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            color: var(--mdc-on-surface);
+            letter-spacing: 0;
         }
         
         .section-subtitle {
             text-align: center;
-            font-size: 1.2rem;
-            color: #666;
-            margin-bottom: 3rem;
-            max-width: 800px;
+            font-size: 0.75rem;
+            color: var(--mdc-on-surface-variant);
+            margin-bottom: 1rem;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            font-weight: 400;
+            letter-spacing: 0.25px;
         }
         
         /* Tools Grid */
         .tools-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
         }
         
         .tool-card {
-            background: white;
-            border-radius: 8px;
-            padding: 2rem;
-            border: 1px solid #e0e0e0;
-            transition: all 0.3s;
+            background: var(--mdc-surface);
+            border-radius: 4px;
+            padding: 0.75rem;
+            box-shadow: var(--mdc-elevation-1);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             color: inherit;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(25, 118, 210, 0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .tool-card:active::before {
+            width: 300px;
+            height: 300px;
         }
         
         .tool-card:hover {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-            transform: translateY(-4px);
-            border-color: #0066cc;
+            box-shadow: var(--mdc-elevation-4);
+            transform: translateY(-2px);
+        }
+        
+        .tool-card:active {
+            box-shadow: var(--mdc-elevation-2);
+            transform: translateY(0);
+        }
+        
+        .tool-card.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        .tool-card.disabled:hover {
+            box-shadow: var(--mdc-elevation-1);
+            transform: none;
+        }
+        
+        .tool-card.disabled .tool-icon {
+            background: var(--mdc-on-surface-variant);
+        }
+        
+        .tool-card.disabled .learn-more,
+        .tool-card.disabled .docs-link {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+        
+        .tool-card.disabled::after {
+            content: 'Unavailable';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 500;
+            z-index: 10;
         }
         
         .tool-icon {
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #0066cc 0%, #004999 100%);
-            border-radius: 12px;
+            width: 32px;
+            height: 32px;
+            background: var(--mdc-primary);
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            box-shadow: var(--mdc-elevation-2);
+            color: white;
+        }
+        
+        .tool-icon .material-icons {
+            font-size: 20px;
         }
         
         .tool-name {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 0.75rem;
-            color: #222;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+            color: var(--mdc-on-surface);
+            letter-spacing: 0.15px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tool-port {
+            font-size: 0.6875rem;
+            font-weight: 400;
+            color: var(--mdc-on-surface-variant);
+            background: var(--mdc-background);
+            padding: 0.125rem 0.375rem;
+            border-radius: 4px;
+            letter-spacing: 0.25px;
         }
         
         .tool-description {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
+            color: var(--mdc-on-surface-variant);
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
             flex-grow: 1;
+            font-size: 0.75rem;
+            letter-spacing: 0.25px;
         }
         
         .tool-links {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.25rem;
             align-items: flex-start;
+            position: relative;
+            z-index: 1;
         }
         
         .learn-more {
-            color: #0066cc;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .learn-more:hover {
-            text-decoration: underline;
-        }
-        
-        .learn-more:after {
-            content: '→';
-        }
-        
-        .docs-link {
-            color: #666;
+            color: var(--mdc-primary);
             font-weight: 500;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1px;
+            padding: 0.125rem 0;
+            transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .learn-more:hover {
+            color: var(--mdc-primary-dark);
+        }
+        
+        .learn-more:after {
+            content: '→';
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .learn-more:hover:after {
+            transform: translateX(2px);
+        }
+        
+        .docs-link {
+            color: var(--mdc-on-surface-variant);
+            font-weight: 400;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.6875rem;
+            letter-spacing: 0.25px;
+            padding: 0.125rem 0;
+            transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .docs-link:hover {
-            color: #0066cc;
-            text-decoration: underline;
+            color: var(--ol-primary);
         }
         
         .docs-link:before {
-            content: '📖';
+            content: '\e8ef';
+            font-family: 'Material Icons';
+            font-size: 0.875rem;
+            vertical-align: middle;
+            margin-right: 0.125rem;
         }
         
         /* Hub Promo Section */
         .hub-promo {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 12px;
-            padding: 3rem;
-            margin-top: 4rem;
+            background: var(--mdc-surface);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-top: 1rem;
             text-align: center;
-            border: 1px solid #dee2e6;
+            box-shadow: var(--mdc-elevation-2);
         }
         
         .hub-promo h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            color: #222;
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: 0.5rem;
+            color: var(--mdc-on-surface);
+            letter-spacing: 0;
         }
         
         .hub-promo p {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 2rem;
-            max-width: 700px;
+            font-size: 0.75rem;
+            color: var(--mdc-on-surface-variant);
+            margin-bottom: 0.75rem;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            letter-spacing: 0.25px;
         }
         
         .hub-promo .btn {
-            padding: 0.875rem 2rem;
-            border-radius: 6px;
+            padding: 0.5rem 1.25rem;
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.75px;
+            text-transform: uppercase;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-block;
-            background-color: #0066cc;
+            background-color: var(--mdc-primary);
             color: #fff;
+            box-shadow: var(--mdc-elevation-2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hub-promo .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
         }
         
         .hub-promo .btn:hover {
-            background-color: #0052a3;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: var(--mdc-primary-dark);
+            box-shadow: var(--mdc-elevation-4);
+        }
+        
+        .hub-promo .btn:active {
+            box-shadow: var(--mdc-elevation-2);
+        }
+        
+        .hub-promo .btn:active::before {
+            width: 300px;
+            height: 300px;
         }
         
         /* Footer */
         footer {
-            background-color: #222;
-            color: #fff;
-            padding: 2rem;
-            margin-top: 4rem;
+            background-color: var(--mdc-on-surface);
+            color: rgba(255, 255, 255, 0.87);
+            padding: 0.75rem;
+            margin-top: 1rem;
         }
         
         .footer-bottom {
             text-align: center;
-            color: #adb5bd;
-            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.6875rem;
+            letter-spacing: 0.25px;
         }
         
         @media (max-width: 768px) {
@@ -241,11 +412,15 @@
             }
             
             .section-title {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
             
             .tools-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1.5rem 1rem 2rem;
             }
         }
     </style>
@@ -254,11 +429,13 @@
     <!-- Header -->
     <header>
         <div class="header-container">
-            <a href="/" class="logo">OpenLegacy Apps</a>
+            <a href="/" class="logo">
+                <img src="image.png" alt="OpenLegacy Logo">
+            </a>
             <nav>
                 <ul>
                     <li><a href="#apps">Community Apps</a></li>
-                    <li><a href="#enterprise">Enterprise Apps</a></li>
+                    <li><a href="#enterprise">Enterprise Products</a></li>
                     <li><a href="https://community.openlegacy.com" target="_blank">Community</a></li>
                     <li><a href="https://forum.community.openlegacy.com/" target="_blank">Forum</a></li>
                 </ul>
@@ -272,8 +449,8 @@
         
         <div class="tools-grid">
             <div class="tool-card">
-                <div class="tool-icon">💻</div>
-                <h3 class="tool-name">OL Terminal</h3>
+                <div class="tool-icon"><span class="material-icons">terminal</span></div>
+                <h3 class="tool-name">OL Terminal<span class="tool-port">:8081</span></h3>
                 <p class="tool-description">
                     Web-based terminal applications for mainframe and AS/400 systems. Access your legacy systems from anywhere.
                 </p>
@@ -285,8 +462,8 @@
             </div>
             
             <div class="tool-card">
-                <div class="tool-icon">⚡</div>
-                <h3 class="tool-name">OL Code</h3>
+                <div class="tool-icon"><span class="material-icons">code</span></div>
+                <h3 class="tool-name">OL Code<span class="tool-port">:8082</span></h3>
                 <p class="tool-description">
                     Web-based IDE for legacy code development. Edit COBOL, RPG, and other legacy languages with modern tooling.
                 </p>
@@ -298,8 +475,8 @@
             </div>
             
             <div class="tool-card">
-                <div class="tool-icon">🗄️</div>
-                <h3 class="tool-name">SQOL</h3>
+                <div class="tool-icon"><span class="material-icons">storage</span></div>
+                <h3 class="tool-name">SQOL<span class="tool-port">:8083</span></h3>
                 <p class="tool-description">
                     Web-based database console for legacy and modern databases. Query, manage, and visualize your data.
                 </p>
@@ -311,45 +488,57 @@
             </div>
         </div>
 
-        <h2 class="section-title" style="margin-top: 4rem;" id="enterprise">Enterprise Apps</h2>
+        <h2 class="section-title" style="margin-top: 1.5rem;" id="enterprise">Enterprise Products</h2>
         <p class="section-subtitle">
-            Advanced tools for API management, integration, and strategic modernization planning.
+            Advanced platform for API integration, decoupling, strategic modernization planning, terminal intelligence analytics, and no-code application building.
         </p>
         
         <div class="tools-grid">
             <div class="tool-card">
-                <div class="tool-icon">🏢</div>
-                <h3 class="tool-name">Hub Integration</h3>
+                <div class="tool-icon"><span class="material-icons">hub</span></div>
+                <h3 class="tool-name">Hub Integration<span class="tool-port">:8080</span></h3>
                 <p class="tool-description">
-                    Integration hub for OpenLegacy API management. Expose legacy systems as modern APIs, manage integrations, and monitor performance.
+                    Integration hub for OpenLegacy API integration. Expose legacy systems as modern APIs, decouple applications.
                 </p>
                 <div class="tool-links">
-                    <a href="http://localhost:8084" class="learn-more" target="_blank">Open Hub</a>
+                    <a href="http://localhost:8080" class="learn-more" target="_blank">Open Hub</a>
                     <a href="https://docs.ol-hub.com/docs/getting-started-with-openlegacy-hub" class="docs-link" target="_blank">Documentation</a>
                 </div>
             </div>
             
             <div class="tool-card">
-                <div class="tool-icon">📋</div>
-                <h3 class="tool-name">Hub Planner</h3>
+                <div class="tool-icon"><span class="material-icons">route</span></div>
+                <h3 class="tool-name">Hub Planner<span class="tool-port">:8080</span></h3>
                 <p class="tool-description">
                     Strategic modernization planning tool. Analyze dependencies, create phased modernization plans, and de-risk your legacy transformation journey.
                 </p>
                 <div class="tool-links">
-                    <a href="http://localhost:8084/mpt/baselines" class="learn-more" target="_blank">Open Planner</a>
+                    <a href="http://localhost:8080/mpt/baselines" class="learn-more" target="_blank">Open Planner</a>
                     <a href="https://docs.planner.ol-hub.com/docs/getting-started-with-planner#/" class="docs-link" target="_blank">Documentation</a>
                 </div>
             </div>
             
             <div class="tool-card">
-                <div class="tool-icon">📊</div>
-                <h3 class="tool-name">Termiq</h3>
+                <div class="tool-icon"><span class="material-icons">analytics</span></div>
+                <h3 class="tool-name">Termiq<span class="tool-port">:8085</span></h3>
                 <p class="tool-description">
                     Terminal intelligence and analytics platform. Gain insights from mainframe and AS/400 screen interactions, user patterns, and system usage metrics.
                 </p>
                 <div class="tool-links">
                     <a href="http://localhost:8085" class="learn-more" target="_blank">Open Termiq</a>
                     <a href="http://localhost:8085/assets/help.html" class="docs-link" target="_blank">Documentation</a>
+                </div>
+            </div>
+            
+            <div class="tool-card">
+                <div class="tool-icon"><span class="material-icons">apps</span></div>
+                <h3 class="tool-name">AppIQ<span class="tool-port">:8084</span></h3>
+                <p class="tool-description">
+                    No-code application builder that converts terminal screens captured by OL Terminal, domain models, and other sources into modern applications consuming backend APIs from OL Hub Integration.
+                </p>
+                <div class="tool-links">
+                    <a href="http://localhost:8084" class="learn-more" target="_blank">Open AppIQ</a>
+                    <a href="http://localhost:8084/help" class="docs-link" target="_blank">Documentation</a>
                 </div>
             </div>
         </div>
@@ -372,27 +561,76 @@
     </footer>
 
     <script>
+        // Health check function for localhost services using /health endpoint
+        // Uses no-cors mode to avoid CORS errors, then checks if request completes
+        async function checkServiceHealth(url) {
+            // Construct health endpoint URL
+            const healthUrl = url.endsWith('/') ? url + 'health' : url + '/health';
+            
+            return new Promise((resolve) => {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                    resolve(false);
+                }, 2000);
+                
+                // Use no-cors mode to avoid CORS errors
+                // Note: We can't read response status with no-cors, but if request completes, service is likely up
+                fetch(healthUrl, {
+                    method: 'GET',
+                    mode: 'no-cors',
+                    signal: controller.signal,
+                    cache: 'no-cache'
+                })
+                .then(() => {
+                    clearTimeout(timeout);
+                    // Request completed without network error - service is likely up
+                    resolve(true);
+                })
+                .catch(() => {
+                    clearTimeout(timeout);
+                    // Network error or timeout - service is down
+                    resolve(false);
+                });
+            });
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.tool-card');
             
-            cards.forEach(card => {
-                // Get the main link URL from the "learn-more" link
+            // Health check all cards
+            cards.forEach(async (card) => {
                 const mainLink = card.querySelector('.learn-more');
                 if (mainLink) {
                     const url = mainLink.getAttribute('href');
                     
-                    // Make card clickable
-                    card.style.cursor = 'pointer';
+                    // Skip external URLs (non-localhost)
+                    if (!url.includes('localhost') && !url.startsWith('http://localhost') && !url.startsWith('https://localhost')) {
+                        // External URLs are assumed available
+                        return;
+                    }
                     
-                    card.addEventListener('click', function(e) {
-                        // Don't navigate if clicking on any link - let the link handle it
-                        if (e.target.closest('.docs-link') || e.target.closest('.learn-more')) {
-                            return;
-                        }
+                    // Check health
+                    const isHealthy = await checkServiceHealth(url);
+                    
+                    if (!isHealthy) {
+                        card.classList.add('disabled');
+                        // Remove click handler for disabled cards
+                        card.style.cursor = 'not-allowed';
+                    } else {
+                        // Make card clickable
+                        card.style.cursor = 'pointer';
                         
-                        // Open the main app URL
-                        window.open(url, '_blank');
-                    });
+                        card.addEventListener('click', function(e) {
+                            // Don't navigate if clicking on any link - let the link handle it
+                            if (e.target.closest('.docs-link') || e.target.closest('.learn-more')) {
+                                return;
+                            }
+                            
+                            // Open the main app URL
+                            window.open(url, '_blank');
+                        });
+                    }
                 }
             });
         });
