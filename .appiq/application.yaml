@@ -1,0 +1,33 @@
+langchain4j:
+  provider: ${LLM_PROVIDER:anthropic} # Options: anthropic, openai, mock
+  anthropic:
+    api-key: ${ANTHROPIC_API_KEY:}
+    model-name: ${ANTHROPIC_MODEL:claude-sonnet-4-5-20250929}
+  openai:
+    api-key: ${OPENAI_API_KEY:}
+    model-name: ${OPENAI_MODEL:gpt-5.1} # Options: gpt-5.1, gpt-4.1, gpt-4o, gpt-4o-mini, gpt-4-turbo-preview, gpt-3.5-turbo
+  mock:
+    enabled: ${MOCK_AI_ENABLED:false}
+    delay-seconds: ${MOCK_AI_DELAY_SECONDS:7} # Delay in seconds to simulate API call (default: 7)
+
+generator:
+  form-columns: 2 # Number of columns for form layout
+
+postgres:
+  port: ${POSTGRES_PORT:5432}
+  host: ${POSTGRES_HOST:localhost}
+  database: ${POSTGRES_DATABASE:postgres}
+  user: ${POSTGRES_USER:postgres}
+  password: ${POSTGRES_PASSWORD:postgres}
+hub:
+  hub-url: http://ol-hub:8080
+  api-key: eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJqdGkiOiJlZTVmNTAyOS02NmE1LTQ1ZDItOGIxOS00ODU1OTUzYzBmNjkiLCJ0aWQiOiI0YTZiZmM1ZC0zYmFlLTQ1YTMtOTliOS1kMWUyNTU4NzVhZGIiLCJodHRwczovL29sLnRlbmFudHMvcmVnaW9uIjoiRVUiLCJpYXQiOjE3MTI1NzUxODgsImlzcyI6Im9sIiwic3ViIjoiOWE3ODBlOGItYmE5OC00ZjBjLTg0MjQtNGU0Y2MyN2IxZjY3In0.a1T5KHdofMrrvy0b-LE1qL2i-h1slojJjnwOUPAgWXFFPas5Iz6phj-eTnNfKBy0r61xwRe0ghg5_yEh6wzhthImf_eAWtr3AOuz4TdCfp-2zomQyt2Mcrh_5_NGlkc1MV6ZwkSFfXtFuofN0bC3JSNS5-IHrn90znI_2zsen4q-JzoZzWcSa14d5BcZRqAju2m9v1SaVUp2Mro-mf2HAYIu4NNzU5_PrCstmjiRH8dvqljlesK602UtDFM8wLIkNbJmJ0jmUyGzNFNL4p3uefZrtM2ifoJWr1RO5xhkDANZXE62PN1ZZROR_V0cz6jxFcxWh3PcSGYcG01IwRH3mA
+
+  hub-url: https://api.ol-hub.com
+  hub-ui-url: ${HUB_UI_URL:https://app.ol-hub.com}
+  api-key: ${HUB_API_KEY:}
+
+deployment:
+  test-url: http://localhost:3000 # URL of the deployed test application frontend. The deployer app should be configured with env vars APPIQ_URL and APPIQ_WS (id) for fixed workspace, or not configured for dynamic switching.
+  test-backend-url: http://localhost:3000 # URL of the deployed test application backend (for refresh endpoint calls).
+

@@ -1,13 +1,12 @@
-version: '3.8'
-
 services:
   homepage:
     image: nginx:alpine
     container_name: ol-homepage
     ports:
-      - "8080:80"
+      - "80:80"
     volumes:
       - ./index.html:/usr/share/nginx/html/index.html:ro
+      - ./image.png:/usr/share/nginx/html/image.png:ro
     networks:
       - app-network
     restart: unless-stopped
@@ -55,10 +54,11 @@ services:
     restart: unless-stopped
 
   ol-hub:
-    image: openlegacy/hub-enterprise-light:latest
+    image: lighthub-ai:latest
     container_name: ol-hub
     ports:
-      - "8084:8080"
+      - "8080:8080"      # Hub Enterprise Light HTTP
+      - "8090:8090"      # Python AI Service HTTP (optional, for debugging)
     environment:
       - EXTERNAL_DB=true
       - OL_DB_PORT=5432
@@ -85,6 +85,32 @@ services:
       - "8085:8080"
     volumes:
       - ./.termiq:/usr/app/.termiq
+    env_file:
+      - config.env
+    networks:
+      - app-network
+    restart: unless-stopped
+    depends_on:
+      - hub-postgres
+    profiles:
+      - all
+
+  appiq:
+    image: appiq:latest
+    container_name: appiq
+    user: "0:0"
+    ports:
+      - "8084:8080"
+    volumes:
+      - ./.appiq:/usr/app/.appiq
+    environment:
+      - EXTERNAL_DB=true
+      - OL_DB_PORT=5432
+      - OL_DB_HOST=hub-postgres
+      - OL_DB_USER=postgres
+      - OL_DB_PASSWORD=olhubpassword
+      - OL_DB_NAME=olhub
+      - OL_DB_POOL_SIZE=10
     env_file:
       - config.env
     networks:

@@ -33,13 +33,13 @@ case "$1" in
     fi
     echo "Services started!"
     echo ""
-    echo "🏠 Homepage: http://localhost:8080"
+    echo "🏠 Homepage: http://localhost:80"
     echo ""
     echo "ol-terminal: http://localhost:8081"
     echo "ol-code: http://localhost:8082"
     echo "sqol: http://localhost:8083"
     if [ "$WITH_HUB" = true ]; then
-      echo "hub-enterprise: http://localhost:8084"
+      echo "hub-enterprise: http://localhost:8080"
       echo "ol-termiq: http://localhost:8085"
     fi
     ;;
