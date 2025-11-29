@@ -54,7 +54,7 @@ services:
     restart: unless-stopped
 
   ol-hub:
-    image: lighthub-ai:latest
+    image: ${OL_HUB_IMAGE:-openlegacy/hub-enterprise-light:latest}
     container_name: ol-hub
     ports:
       - "8080:8080"      # Hub Enterprise Light HTTP
@@ -76,6 +76,7 @@ services:
     restart: unless-stopped
     profiles:
       - all
+      - all-ai
 
   ol-termiq:
     image: public.ecr.aws/openlegacy/ol-tools/ol-termiq:latest
@@ -94,6 +95,7 @@ services:
       - hub-postgres
     profiles:
       - all
+      - all-ai
 
   appiq:
     image: appiq:latest
@@ -120,6 +122,7 @@ services:
       - hub-postgres
     profiles:
       - all
+      - all-ai
 
   hub-postgres:
     image: postgres:15-alpine
@@ -138,6 +141,7 @@ services:
     restart: unless-stopped
     profiles:
       - all
+      - all-ai
 
 volumes:
   hub-postgres-data:

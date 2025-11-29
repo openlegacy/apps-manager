@@ -12,16 +12,28 @@ else
   echo "Warning: config.env not found!"
 fi
 
-# Check if --all flag is present
+# Check if --all or --all-ai flag is present
 WITH_HUB=false
 PROFILE_ARG=""
+OL_HUB_IMAGE=""
 for arg in "$@"; do
   if [ "$arg" = "--all" ]; then
     WITH_HUB=true
     PROFILE_ARG="--profile all"
+    OL_HUB_IMAGE="openlegacy/hub-enterprise-light:latest"
+    break
+  elif [ "$arg" = "--all-ai" ]; then
+    WITH_HUB=true
+    PROFILE_ARG="--profile all-ai"
+    OL_HUB_IMAGE="lighthub-ai:latest"
     break
   fi
 done
+
+# Export OL_HUB_IMAGE if set
+if [ -n "$OL_HUB_IMAGE" ]; then
+  export OL_HUB_IMAGE
+fi
 
 case "$1" in
   start)
@@ -64,7 +76,7 @@ case "$1" in
     docker-compose $PROFILE_ARG pull
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart|logs|status|pull} [--all]"
+    echo "Usage: $0 {start|stop|restart|logs|status|pull} [--all|--all-ai]"
     echo ""
     echo "Commands:"
     echo "  start   - Start all services"
@@ -75,11 +87,13 @@ case "$1" in
     echo "  pull    - Pull latest images"
     echo ""
     echo "Options:"
-    echo "  --all  - Include Hub Enterprise service (optional)"
+    echo "  --all     - Include Hub Enterprise service with openlegacy/hub-enterprise-light:latest"
+    echo "  --all-ai  - Include Hub Enterprise service with lighthub-ai:latest"
     echo ""
     echo "Examples:"
-    echo "  $0 start        # Start core services"
-    echo "  $0 start --all  # Start all services including Hub Enterprise"
+    echo "  $0 start         # Start core services"
+    echo "  $0 start --all   # Start all services including Hub Enterprise"
+    echo "  $0 start --all-ai # Start all services including Hub Enterprise AI"
     exit 1
     ;;
 esac
