@@ -103,6 +103,7 @@ services:
     user: "0:0"
     ports:
       - "8084:8080"
+      - "3000:3000"
     volumes:
       - ./.appiq:/usr/app/.appiq
     environment:
