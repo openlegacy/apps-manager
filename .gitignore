@@ -1,8 +1,5 @@
 # OpenLegacy Apps - Configuration
 
-# Environment configuration with sensitive data
-config.env
-
 # App configuration directories (may contain sensitive data)
 # Uncomment these if your configurations contain credentials
 # .ol-terminal/
