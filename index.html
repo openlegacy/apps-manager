@@ -98,6 +98,141 @@
             color: var(--ol-primary);
         }
         
+        /* Refresh Button */
+        .refresh-button {
+            background-color: var(--mdc-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--mdc-elevation-2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .refresh-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .refresh-button:hover {
+            background-color: var(--mdc-primary-dark);
+            box-shadow: var(--mdc-elevation-4);
+        }
+        
+        .refresh-button:active {
+            box-shadow: var(--mdc-elevation-2);
+        }
+        
+        .refresh-button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .refresh-button .material-icons {
+            font-size: 18px;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .refresh-button.refreshing .material-icons {
+            animation: rotate 1s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 4rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background-color: var(--mdc-surface);
+            color: var(--mdc-on-surface);
+            padding: 0.75rem 1rem;
+            border-radius: 4px;
+            box-shadow: var(--mdc-elevation-8);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            max-width: 90%;
+            min-width: 300px;
+        }
+        
+        .notification.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .notification-icon .material-icons {
+            font-size: 16px;
+            color: white;
+        }
+        
+        .notification-content {
+            flex: 1;
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--mdc-on-surface-variant);
+            cursor: pointer;
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+        
+        .notification-close:hover {
+            background-color: var(--mdc-divider);
+        }
+        
+        .notification-close .material-icons {
+            font-size: 18px;
+        }
+        
         /* Main Content */
         .container {
             max-width: 1200px;
@@ -411,6 +546,15 @@
                 display: none;
             }
             
+            .refresh-button span:last-child {
+                display: none;
+            }
+            
+            .refresh-button {
+                padding: 0.5rem;
+                min-width: 40px;
+            }
+            
             .section-title {
                 font-size: 1.5rem;
             }
@@ -440,8 +584,23 @@
                     <li><a href="https://forum.community.openlegacy.com/" target="_blank">Forum</a></li>
                 </ul>
             </nav>
+            <button class="refresh-button" id="refresh-button" title="Refresh service status">
+                <span class="material-icons">refresh</span>
+                <span>Refresh</span>
+            </button>
         </div>
     </header>
+    
+    <!-- Notification -->
+    <div class="notification" id="status-notification">
+        <div class="notification-icon">
+            <span class="material-icons">check_circle</span>
+        </div>
+        <div class="notification-content" id="notification-content"></div>
+        <button class="notification-close" id="notification-close">
+            <span class="material-icons">close</span>
+        </button>
+    </div>
 
     <!-- Main Content -->
     <div class="container">
@@ -595,10 +754,115 @@
             });
         }
         
+        // Function to show notification
+        function showNotification(message) {
+            const notification = document.getElementById('status-notification');
+            const content = document.getElementById('notification-content');
+            
+            content.textContent = message;
+            notification.classList.add('show');
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideNotification();
+            }, 5000);
+        }
+        
+        // Function to hide notification
+        function hideNotification() {
+            const notification = document.getElementById('status-notification');
+            notification.classList.remove('show');
+        }
+        
+        // Function to get service name from card
+        function getServiceName(card) {
+            const toolName = card.querySelector('.tool-name');
+            if (toolName) {
+                // Get text content and remove port number
+                return toolName.textContent.replace(/:\d+$/, '').trim();
+            }
+            return 'Service';
+        }
+        
+        // Function to enable a card
+        function enableCard(card, url, showNotif = false) {
+            const wasDisabled = card.classList.contains('disabled');
+            card.classList.remove('disabled');
+            card.style.cursor = 'pointer';
+            
+            // Show notification if card was previously disabled
+            if (wasDisabled && showNotif) {
+                const serviceName = getServiceName(card);
+                showNotification(`${serviceName} is now available`);
+            }
+            
+            // Add click handler if not already added
+            if (!card.dataset.clickHandlerAdded) {
+                card.addEventListener('click', function(e) {
+                    // Don't navigate if clicking on any link - let the link handle it
+                    if (e.target.closest('.docs-link') || e.target.closest('.learn-more')) {
+                        return;
+                    }
+                    
+                    // Open the main app URL
+                    window.open(url, '_blank');
+                });
+                card.dataset.clickHandlerAdded = 'true';
+            }
+        }
+        
+        // Function to disable a card
+        function disableCard(card) {
+            card.classList.add('disabled');
+            card.style.cursor = 'not-allowed';
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.tool-card');
+            const disabledCards = new Map(); // Store disabled cards with their URLs for polling
             
-            // Health check all cards
+            // Function to refresh all services
+            async function refreshAllServices() {
+                const refreshButton = document.getElementById('refresh-button');
+                
+                // Add refreshing animation
+                refreshButton.classList.add('refreshing');
+                refreshButton.disabled = true;
+                
+                // Check all cards
+                for (const card of cards) {
+                    const mainLink = card.querySelector('.learn-more');
+                    if (mainLink) {
+                        const url = mainLink.getAttribute('href');
+                        
+                        // Skip external URLs (non-localhost)
+                        if (!url.includes('localhost') && !url.startsWith('http://localhost') && !url.startsWith('https://localhost')) {
+                            continue;
+                        }
+                        
+                        // Check health
+                        const isHealthy = await checkServiceHealth(url);
+                        const wasDisabled = card.classList.contains('disabled');
+                        
+                        if (!isHealthy) {
+                            disableCard(card);
+                            disabledCards.set(card, url);
+                        } else {
+                            enableCard(card, url, wasDisabled);
+                            // Remove from disabled cards if it was there
+                            if (wasDisabled) {
+                                disabledCards.delete(card);
+                            }
+                        }
+                    }
+                }
+                
+                // Remove refreshing animation
+                refreshButton.classList.remove('refreshing');
+                refreshButton.disabled = false;
+            }
+            
+            // Initial health check for all cards
             cards.forEach(async (card) => {
                 const mainLink = card.querySelector('.learn-more');
                 if (mainLink) {
@@ -606,7 +870,8 @@
                     
                     // Skip external URLs (non-localhost)
                     if (!url.includes('localhost') && !url.startsWith('http://localhost') && !url.startsWith('https://localhost')) {
-                        // External URLs are assumed available
+                        // External URLs are assumed available - enable them
+                        enableCard(card, url);
                         return;
                     }
                     
@@ -614,25 +879,32 @@
                     const isHealthy = await checkServiceHealth(url);
                     
                     if (!isHealthy) {
-                        card.classList.add('disabled');
-                        // Remove click handler for disabled cards
-                        card.style.cursor = 'not-allowed';
+                        disableCard(card);
+                        disabledCards.set(card, url);
                     } else {
-                        // Make card clickable
-                        card.style.cursor = 'pointer';
-                        
-                        card.addEventListener('click', function(e) {
-                            // Don't navigate if clicking on any link - let the link handle it
-                            if (e.target.closest('.docs-link') || e.target.closest('.learn-more')) {
-                                return;
-                            }
-                            
-                            // Open the main app URL
-                            window.open(url, '_blank');
-                        });
+                        enableCard(card, url);
                     }
                 }
             });
+            
+            // Poll disabled cards every 5 seconds
+            setInterval(async () => {
+                for (const [card, url] of disabledCards.entries()) {
+                    const isHealthy = await checkServiceHealth(url);
+                    
+                    if (isHealthy) {
+                        // Service is now available - enable the card and show notification
+                        enableCard(card, url, true);
+                        disabledCards.delete(card);
+                    }
+                }
+            }, 5000);
+            
+            // Refresh button handler
+            document.getElementById('refresh-button').addEventListener('click', refreshAllServices);
+            
+            // Close notification button handler
+            document.getElementById('notification-close').addEventListener('click', hideNotification);
         });
     </script>
 </body>

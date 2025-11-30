@@ -6,13 +6,13 @@ connectionProperties:
   defaultFilter: ""
 generalSettings:
   hubUrl: http://ol-hub:8080
-  hubApiKey:
+  hubApiKey: ${OL_HUB_API_KEY:}
   terminalUrl: "http://localhost:8081/emulation"
   mockServerEnabled: false
 admin:
   username: "openlegacy"
   password: "olpassword"
 aiSettings:
-  aiModel: ""
-  aiApiKey: ""
+  aiModel: "gpt-5.1"
+  aiApiKey: "${OL_AI_API_KEY:}"
   aiBaseUrl: ""

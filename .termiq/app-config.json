@@ -1,0 +1,456 @@
+{
+  "olHubConfig": {
+    "hubUrl": "https://api.ol-hub.com",
+    "apiKey": "${OL_HUB_API_KEY:}"
+  },
+  "aiConfig": {
+    "apiKey": "",
+    "url": "https://api.anthropic.com",
+    "model": "claude-sonnet-4-20250514",
+    "temperature": 0.7,
+    "maxTokens": 4096,
+    "logRequests": false,
+    "logResponses": false
+  },
+  "classifierConfig": {
+    "similarityThreshold": 0.8,
+    "lastLinesToIgnore": 2,
+    "jaccardWeight": 0.7,
+    "editableWeight": 0.3,
+    "maxEmptyFieldLength": 78,
+    "useEditableForClassification": false
+  },
+  "menuTagConfig": {
+    "codeMenuOptionRegex": "\\s*\\d{1,2}\\.?\\s*",
+    "captionMenuOptionRegex": "[\\w\\s\\.-]+",
+    "singleMenuOptionRegex": "\\s*\\d{1,2}\\.\\s+[\\w\\s\\.-]+",
+    "maxDistance": 10,
+    "minimumMenuItems": 2,
+    "maxSelectionFieldLength": 2,
+    "baseConfidence": 0.8
+  },
+  "systemTagConfig": {
+    "systemKeywords": [
+      "signon",
+      "logon",
+      "userid",
+      "groupid",
+      "language",
+      "terminal",
+      "session",
+      "tcpip telnet",
+      "innovation center",
+      "ibm",
+      "applid",
+      "cicsts",
+      "as400",
+      "ibm i",
+      "system",
+      "subsystem",
+      "display",
+      "qinter",
+      "qpadev"
+    ],
+    "systemHeaderPatterns": [
+      "(?i)tran\\s*:\\s*\\w+",
+      "(?i)prog\\s*:\\s*\\w+",
+      "(?i)appid\\s*:\\s*\\w+",
+      "(?i)sysid\\s*:\\s*\\w+",
+      "(?i)applid\\s+\\w+",
+      "(?i)system\\s*\\.{3,}\\s*:\\s*\\w+",
+      "(?i)subsystem\\s*\\.{3,}\\s*:\\s*\\w+",
+      "(?i)display\\s*\\.{3,}\\s*:\\s*\\w+"
+    ],
+    "systemProductPatterns": [
+      "(?i)cics\\s+(ts\\s+)?[\\d.]+",
+      "(?i)z/os\\s+[\\d.]+",
+      "(?i)mvs",
+      "(?i)tso",
+      "(?i)ims",
+      "(?i)dfh\\w+",
+      "(?i)welcome\\s+to\\s+(cics|tso|ims)",
+      "(?i)ibm\\s+i\\s+main\\s+menu",
+      "(?i)as/400",
+      "(?i)sign\\s+on"
+    ],
+    "systemMessagePrefixes": [
+      "DFH",
+      "IEF",
+      "IKJ",
+      "TSO",
+      "HASP",
+      "JES",
+      "ICH"
+    ],
+    "systemColors": [
+      "BLUE",
+      "YELLOW",
+      "GREEN",
+      "RED",
+      "WHITE"
+    ],
+    "excludePatterns": [
+      "(?i)aws\\s+mainframe\\s+modernization",
+      "(?i)carddemo",
+      "(?i)credit\\s+card\\s+demo",
+      "(?i)demo\\s+application"
+    ],
+    "highConfidenceThreshold": 0.8,
+    "mediumConfidenceThreshold": 0.6,
+    "colorMatchThreshold": 0.7
+  },
+  "loginTagConfig": {
+    "userFieldRegex": "\\s*(?i)user.*",
+    "ibmLoginErrorRegex": "(?i)^(CPF|DFH|IKJ|ISP|HASP|IEF|ICH|IRR|DSN)\\d{4}\\s*-\\s*.*",
+    "copyrightExcludeRegex": "(?i)\\(c\\)\\s+copyright\\s+ibm\\s+corp.*",
+    "errorColors": ["RED", "WHITE"],
+    "minRequiredFields": 2,
+    "baseConfidence": 0.8
+  },
+  "listTagConfig": {
+    "minColumns": 2,
+    "minColumnsForReport": 4,
+    "minColumnsForWindow": 1,
+    "minRows": 3,
+    "middleRowsStart": 5,
+    "middleRowsEnd": 20,
+    "selectionFieldMinLength": 1,
+    "selectionFieldMaxLength": 2,
+    "notAColumnRegex": "([\\w\\p{L} ]+[\\.:])+",
+    "atLeastOneFieldShouldBe": ".*",
+    "actionsRegex": "([\\w\\p{L}]+)[=-]([\\w\\p{L}]+[\\w\\p{L} ]*)",
+    "actionsSplitter": "  ",
+    "rowsDistance": 3,
+    "baseConfidence": 0.7,
+    "selectionBoost": 0.2,
+    "columnBoost": 0.1,
+    "minimumConfidence": 0.6,
+    "searchFieldsEnabled": true,
+    "searchFieldLabelRegex": "[\\w\\s/#]+\\s*[.:\\-_]+.*",
+    "searchFieldMaxDistance": 10,
+    "searchFieldMinLength": 1,
+    "searchFieldMaxLength": 50,
+    "searchFieldMaxLabelLength": 35,
+    "searchFieldSystemHeaderRows": 3,
+    "searchFieldLabelAboveMaxDistance": 2,
+    "searchFieldMinRow": 4
+  },
+  "windowTagConfig": {
+    "borderPatterns": [
+      {
+        "topHorizontalBordersPattern": "\\+-+\\+",
+        "bottomHorizontalBordersPattern": "\\+-+\\+",
+        "verticalBorder": "|"
+      },
+      {
+        "topHorizontalBordersPattern": "[.]{5,}",
+        "bottomHorizontalBordersPattern": ":[.]+:",
+        "verticalBorder": ":"
+      }
+    ],
+    "backColorEnabled": true,
+    "minimumWindowWidth": 5,
+    "windowBackColors": ["BLUE", "GREEN", "CYAN"],
+    "baseConfidence": 0.8,
+    "backColorBoost": 0.1,
+    "equalsSignBorderEnabled": true,
+    "minimumEqualsSignLength": 5,
+    "equalsSignPattern": "={5,}",
+    "titleSearchRowsAbove": 2,
+    "titleSearchRowsBelow": 1,
+    "titlePattern": "[\\w\\s/\\-]+",
+    "minimumTitleLength": 3,
+    "createSubSnapshot": true,
+    "includeWindowBorders": false
+  },
+  "formTagConfig": {
+    "labelRegex": "[\\w\\s/#]+\\s*[.:\\-_]+.*",
+    "readonlyFieldRegex": "[\\w\\s\\.,\\-+()$%*/:=\\[\\]]{2,}",
+    "maxDistance": 10,
+    "minimumFieldLength": 1,
+    "maximumFieldLength": 50,
+    "maximumLabelLength": 35,
+    "commandLength": 20,
+    "minimumEditableFields": 2,
+    "baseConfidence": 0.6,
+    "editableFieldBoost": 0.1,
+    "readonlyFieldBoost": 0.05,
+    "commandFieldBoost": 0.02,
+    "minimumConfidence": 0.7,
+    "systemHeaderRows": 3,
+    "labelAboveFieldMaxDistance": 2,
+    "minFormFieldRow": 4,
+      "fieldTypeDetection": {
+        "dateKeywords": ["date", "time", "opened", "expiry", "birth", "reissue"],
+        "ssnKeywords": ["ssn", "social security"],
+        "phoneKeywords": ["phone", "telephone", "mobile"],
+        "integerKeywords": ["number", "quantity", "count", "score"],
+        "decimalKeywords": ["amount", "limit", "balance", "price", "cost", "total", "sum", "value"],
+        "booleanKeywords": ["yes", "no", "true", "false", "active"],
+      "datePatterns": [
+        [4, 2, 2],
+        [2, 2, 4],
+        [2, 2, 2]
+      ],
+      "ssnPatterns": [
+        [3, 2, 4],
+        [3, 3, 4]
+      ],
+      "phonePatterns": [
+        [3, 3, 4],
+        [3, 4, 4],
+        [4, 3, 3]
+      ]
+    }
+  },
+  "screenNameConfig": {
+    "titleRegex": "[\\w\\p{L}]+[\\w\\p{L} \\-/]*",
+    "titleStartRow": 1,
+    "titleEndRow": 3,
+    "titleStartColumn": 1,
+    "titleEndColumn": 80,
+    "programNameRegex": "[A-Z][A-Z][A-Z][A-Z]\\w{2,}\\s*",
+    "maxScreenNameLength": 32,
+    "cleanupPrefixes": ["SCREEN", "DISPLAY", "PANEL", "WINDOW"],
+    "cleanupSuffixes": ["SCREEN", "DISPLAY", "PANEL", "WINDOW"],
+    "defaultScreenName": "UNTITLED_SCREEN",
+    "enableWindowBorderDetection": false,
+    "windowBorderPatterns": [
+      ".*\\+-+\\+.*",
+      ".*[.]{5,}.*",
+      ".*\\|.*",
+      ".*:.*"
+    ]
+  },
+  "titleRecognizerConfig": {
+    "titleMinLength": 6,
+    "titleStartRow": 1,
+    "titleEndRow": 4,
+    "titleStartColumn": 15,
+    "titleEndColumn": 70,
+    "alphanumericPattern": "^[a-zA-Z0-9][a-zA-Z0-9 ()/:,-]*[a-zA-Z0-9)]$",
+    "prioritizeLowerRows": true,
+    "preferWhiteColor": true,
+    "preferCentered": true
+  },
+  "stateRecognizerConfig": {
+    "systemErrorConfig": {
+      "ibmErrorPatterns": [
+        "DFH[A-Z]{2}\\d{4}.*",
+        "DFS\\d{4}[A-Z]?.*",
+        "IKJ\\d{5}[A-Z]?.*",
+        "ISP\\d{5}[A-Z]?.*",
+        "HASP\\d{3}.*",
+        "IEF\\d{3}[A-Z]?.*",
+        "ICH\\d{3}[A-Z]?.*",
+        "IRR\\d{3}[A-Z]?.*",
+        "DSN\\d{4}[A-Z]?.*"
+      ],
+      "genericErrorPatterns": [
+        ".*[Ee]rror.*",
+        ".*[Aa]bended.*",
+        ".*not recognized.*"
+      ],
+      "highConfidencePatterns": [
+        ".*Transaction.*not recognized.*",
+        "DFH[A-Z]{2}\\d{4}.*"
+      ],
+      "errorColors": ["RED", "YELLOW"],
+      "excludePatterns": [
+        "DFHCE35\\d{2}.*Please type your.*",
+        "DFHCE35\\d{2}.*Invalid.*",
+        "DFHCE35\\d{2}.*not authorized.*"
+      ],
+      "baseConfidence": 0.7,
+      "highConfidenceThreshold": 0.95,
+      "colorBoost": 0.2,
+      "locationBoost": 0.1,
+      "minimumConfidence": 0.6
+    },
+    "appErrorConfig": {
+      "validationErrorPatterns": [
+        ".*should be between.*",
+        ".*must be.*",
+        ".*is required.*",
+        ".*[Ii]nvalid.*",
+        ".*Invalid.*value.*",
+        ".*Field.*cannot be.*",
+        ".*Value.*out of range.*",
+        ".*Cannot.*empty.*",
+        ".*format.*invalid.*",
+        ".*does not match.*",
+        ".*Please enter.*valid.*",
+        ".*Please provide.*"
+      ],
+      "fieldErrorPatterns": [
+        ".*[Ff]ield.*error.*",
+        ".*[Ff]ield.*validation.*failed.*",
+        ".*validation.*failed.*",
+        ".*input.*invalid.*",
+        ".*data.*error.*",
+        ".*validation.*failed.*for.*"
+      ],
+      "businessLogicErrorPatterns": [
+        ".*record.*not found.*",
+        ".*already exists.*",
+        ".*operation.*not allowed.*",
+        ".*insufficient.*",
+        ".*cannot.*process.*",
+        ".*duplicate.*",
+        ".*not authorized.*operation.*"
+      ],
+      "errorColors": ["RED", "YELLOW"],
+      "primaryErrorColor": "RED",
+      "excludeSystemErrorPatterns": [
+        "DFH[A-Z]{2}\\d{4}.*",
+        "DFS\\d{4}[A-Z]?.*",
+        "IKJ\\d{5}[A-Z]?.*",
+        "ISP\\d{5}[A-Z]?.*"
+      ]
+    },
+    "confirmationConfig": {
+      "confirmationPatterns": [
+        ".*[Cc]hanges.*validated.*[Pp]ress.*[Ff]5.*save.*",
+        ".*[Vv]alidation.*passed.*[Pp]ress.*[Ff]5.*save.*",
+        ".*[Ss]uccessfully.*validated.*[Pp]ress.*[Ff]5.*save.*",
+        ".*[Dd]ata.*ready.*for.*save[\\s\\p{Punct}]*[Pp]ress.*[Ff]5.*save.*",
+        ".*[Rr]eady.*to.*save.*[Pp]ress.*[Ff]5.*",
+        ".*[Cc]onfirm.*save.*[Pp]ress.*[Ff]5.*"
+      ],
+      "actionKeyPatterns": [
+        ".*[Ff]5.*[Ss]ave.*",
+        ".*[Pp]ress.*[Ff]5.*",
+        ".*[Ee]nter.*to.*save.*",
+        ".*[Cc]onfirm.*with.*[Ff]5.*"
+      ],
+      "confirmationColors": ["WHITE", "GREEN", "BLUE"],
+      "primaryConfirmationColor": "WHITE",
+      "baseConfidence": 0.75,
+      "patternMatchBoost": 0.08,
+      "colorBoost": 0.04,
+      "minimumConfidence": 0.7
+    },
+    "transactionSuccessConfig": {
+      "successPatterns": [
+        ".*[Cc]hanges.*committed.*database.*",
+        ".*[Ss]uccessfully.*updated.*",
+        ".*[Ss]uccessfully.*saved.*",
+        ".*[Ss]uccessfully.*inserted.*",
+        ".*[Ss]uccessfully.*created.*",
+        ".*[Ss]uccessfully.*deleted.*",
+        ".*[Tt]ransaction.*completed.*",
+        ".*[Dd]ata.*saved.*",
+        ".*[Uu]pdated.*successfully.*",
+        ".*[Ss]aved.*successfully.*",
+        ".*[Cc]ommitted.*successfully.*",
+        ".*[Cc]hanges.*applied.*",
+        ".*[Oo]peration.*completed.*",
+        ".*[Pp]rocessing.*complete.*",
+        ".*[Rr]ecord.*updated.*",
+        ".*[Rr]ecord.*saved.*",
+        ".*[Rr]ecord.*created.*",
+        ".*[Rr]ecord.*added.*",
+        ".*updated.*",
+        ".*saved.*",
+        ".*inserted.*",
+        ".*created.*",
+        ".*added.*",
+        ".*deleted.*",
+        ".*removed.*",
+        ".*processed.*",
+        ".*completed.*",
+        ".*success.*"
+      ],
+      "specificPatterns": [
+        ".*[Cc]hanges.*committed.*database.*",
+        ".*[Tt]ransaction.*completed.*successfully.*",
+        ".*[Oo]peration.*completed.*successfully.*"
+      ],
+      "highConfidenceKeywords": [
+        "committed", "successfully", "completed", "applied"
+      ],
+      "successColors": ["WHITE", "GREEN", "BLUE", "YELLOW"],
+      "primarySuccessColor": "WHITE",
+      "baseConfidence": 0.8,
+      "colorBoost": 0.1,
+      "keywordBoost": 0.08,
+      "locationBoost": 0.05,
+      "specificPatternBoost": 0.1,
+      "successMessageMinRow": 20,
+      "successMessageMaxRow": 24,
+      "minimumConfidence": 0.75
+    }
+  },
+  "actionConfig": {
+    "actionsRegex": "([\\w\\p{L}]+)[=-]([\\w\\p{L}]+[\\w\\p{L} ]*)",
+    "actionsSplitter": "  ",
+    "rowsFromEnd": 2,
+    "keyMappings": {
+      "ENTER": "Submit"
+    },
+    "useKeyMappings": true,
+    "naturalActionsEnabled": true,
+    "naturalPfActionsMinimumRow": 20,
+    "naturalPfActionsRowRegex": ".*((PF)\\d+-+)+",
+    "naturalMaxCaptionLength": 4
+  },
+  "identifySnapshotsConfig": {
+    "identifierRegex": "[\\w\\p{L}]+[\\w\\p{L} \\-/]*",
+    "startRow": 1,
+    "endRow": 3
+  },
+  "formOperationConfig": {
+    "minimumFieldsForAnalysis": 3,
+    "minimumConfidence": 0.6,
+    "baseConfidence": 0.7,
+    "queryModeMinRatio": 3.0,
+    "queryModeRowTolerance": 2,
+    "queryModeSeparationThreshold": 0.5,
+    "queryModeMaxEditableFields": 4,
+    "queryModeMaxEditableRows": 3,
+    "viewModeReadonlyThreshold": 0.9,
+    "createModeEditableThreshold": 0.7,
+    "createModeEmptyFieldThreshold": 0.7,
+    "centerRowStart": 8,
+    "centerRowEnd": 16,
+    "centerPositionBoost": 0.2,
+    "emptyFieldPatterns": ["^\\s*$", "^[\\s.]*$", "^[_]*$"]
+  },
+  "terminalEventConfig": {
+    "dumpUnknown": "ONE_SAMPLE",
+    "snapshotFields": "ENTITY_KEYS"
+  },
+  "databaseConfig": {
+    "type": "POSTGRESQL",
+    "url": "jdbc:postgresql://localhost:5432/postgres",
+    "username": "postgres",
+    "password": "postgres",
+    "driverClassName": "org.postgresql.Driver",
+    "host": "localhost",
+    "port": 5432,
+    "database": "postgres",
+    "migrations": {
+      "enabled": true,
+      "location": "classpath:db/migration",
+      "table": "flyway_schema_history",
+      "cleanOnValidationError": false,
+      "baselineOnMigrate": true,
+      "baselineVersion": "0",
+      "validateOnMigrate": true
+    }
+  },
+  "entityNamingConfig": {
+    "textDelimiters": [
+      "(", "[", "{", "-", ":", "|"
+    ],
+    "prefixesToRemove": [
+      "update", "edit", "modify", "view", "display", "show", "enter", "input", "the"
+    ],
+    "suffixesToRemove": [
+      "details", "information", "info", "screen", "page", "form", "data", "entry", "window"
+    ],
+    "wordsToRemove": [],
+    "minimumNameLength": 2,
+    "fallbackName": "entity"
+  }
+}

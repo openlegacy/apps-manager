@@ -1,6 +1,6 @@
 generalSettings:
   hubUrl: http://ol-hub:8080
-  hubApiKey:
+  hubApiKey: ${OL_HUB_API_KEY:}
 database:
   timeouts:
     connection: 30

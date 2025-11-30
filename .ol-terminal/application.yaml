@@ -2,7 +2,7 @@ generalSettings:
   userNameLabel: user.*
   saveAllSessions: false
   hubUrl: http://ol-hub:8080
-  hubApiKey:
+  hubApiKey: ${OL_HUB_API_KEY:}
   actionWebhook: http://ol-termiq:8080//api/runtime/snapshot/my-workspace
 connectivityProperties:
   connectorType: client-terminal
