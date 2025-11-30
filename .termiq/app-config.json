@@ -1,6 +1,6 @@
 {
   "olHubConfig": {
-    "hubUrl": "https://api.ol-hub.com",
+    "hubUrl": "http://ol-hub:8080",
     "apiKey": "${OL_HUB_API_KEY:}"
   },
   "aiConfig": {
@@ -417,8 +417,8 @@
     "emptyFieldPatterns": ["^\\s*$", "^[\\s.]*$", "^[_]*$"]
   },
   "terminalEventConfig": {
-    "dumpUnknown": "ONE_SAMPLE",
-    "snapshotFields": "ENTITY_KEYS"
+    "saveSnapshots": true,
+    "snapshotFields": "ALL_MAPPINGS"
   },
   "databaseConfig": {
     "type": "POSTGRESQL",

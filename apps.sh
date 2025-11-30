@@ -225,7 +225,7 @@ prompt_ai_api_key() {
   fi
 }
 
-# Function to replace ${OL_HUB_API_KEY:} in application.yaml files
+# Function to replace ${OL_HUB_API_KEY:} in application.yaml and app-config.json files
 replace_hub_api_keys() {
   if [ -z "$OL_HUB_API_KEY" ]; then
     if [ "$WITH_HUB" = false ]; then
@@ -236,18 +236,72 @@ replace_hub_api_keys() {
     return
   fi
   
-  echo "Replacing \${OL_HUB_API_KEY:} in application.yaml files..."
+  echo "Replacing \${OL_HUB_API_KEY:} and existing API key values in application.yaml and app-config.json files..."
+  # Process application.yaml files
   find . -mindepth 2 -name "application.yaml" -type f | while read -r yaml_file; do
     if [ -f "$yaml_file" ]; then
       local updated=false
       # Replace ${OL_HUB_API_KEY:} pattern
       if grep -q '\${OL_HUB_API_KEY:}' "$yaml_file"; then
-        # Use sed to replace the pattern, escaping special characters
-        sed "s|\${OL_HUB_API_KEY:}|$OL_HUB_API_KEY|g" "$yaml_file" > "${yaml_file}.tmp" && mv "${yaml_file}.tmp" "$yaml_file"
+        # Use awk to safely handle special characters in the API key
+        awk -v api_key="$OL_HUB_API_KEY" '{ gsub(/\$\{OL_HUB_API_KEY:\}/, api_key); print }' "$yaml_file" > "${yaml_file}.tmp" && mv "${yaml_file}.tmp" "$yaml_file"
+        updated=true
+      fi
+      # Also replace any existing API key values (handles various YAML formats)
+      # Pattern: hubApiKey: value or hub-api-key: value (replace value part, but skip if value is empty)
+      if grep -qE '(hubApiKey|hub-api-key):' "$yaml_file"; then
+        # Replace the value after the colon, but only if it's not empty (contains at least one non-whitespace character)
+        # Use awk to safely handle special characters in the API key
+        awk -v api_key="$OL_HUB_API_KEY" '
+          /^hubApiKey:/ || /^hub-api-key:/ {
+            # Extract the key name (everything before the colon)
+            if (/^hubApiKey:/) {
+              key_name = "hubApiKey"
+            } else {
+              key_name = "hub-api-key"
+            }
+            # Remove any trailing comment
+            gsub(/#.*$/, "", $0)
+            # Replace everything after the key and colon with the new API key
+            print key_name ": " api_key
+            next
+          }
+          { print }
+        ' "$yaml_file" > "${yaml_file}.tmp2" && mv "${yaml_file}.tmp2" "$yaml_file"
         updated=true
       fi
       if [ "$updated" = true ]; then
         echo "  Updated: $yaml_file"
+      fi
+    fi
+  done
+  
+  # Process app-config.json files
+  find . -mindepth 2 \( -name "app-config.json" -o -name "appconfig.json" \) -type f | while read -r json_file; do
+    if [ -f "$json_file" ]; then
+      local updated=false
+      # Replace ${OL_HUB_API_KEY:} pattern
+      if grep -q '\${OL_HUB_API_KEY:}' "$json_file"; then
+        # Use awk to safely handle special characters in the API key
+        awk -v api_key="$OL_HUB_API_KEY" '{ gsub(/\$\{OL_HUB_API_KEY:\}/, api_key); print }' "$json_file" > "${json_file}.tmp" && mv "${json_file}.tmp" "$json_file"
+        updated=true
+      fi
+      # Also replace any existing API key values in JSON format
+      # Pattern: "apiKey": "any-value" (replace the value part, but skip if value is empty string)
+      if grep -qE '"apiKey"\s*:\s*"[^"]+"' "$json_file"; then
+        # Replace the value between quotes after "apiKey", but only if it's not an empty string
+        # Use awk to safely handle special characters in the API key
+        awk -v api_key="$OL_HUB_API_KEY" '
+          /"apiKey"[[:space:]]*:[[:space:]]*"[^"]+"/ {
+            # Replace the value part while preserving JSON structure
+            gsub(/"apiKey"[[:space:]]*:[[:space:]]*"[^"]+"/, "\"apiKey\": \"" api_key "\"")
+          }
+          { print }
+        ' "$json_file" > "${json_file}.tmp2" && mv "${json_file}.tmp2" "$json_file"
+        updated=true
+      fi
+      if [ "$updated" = true ]; then
+        echo "  Updated: $json_file"
       fi
     fi
   done

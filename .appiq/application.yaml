@@ -15,7 +15,7 @@ generator:
 hub:
   hub-url: http://ol-hub:8080
   hub-ui-url: http://ol-hub:8080
-  hub-api-key: ${OL_HUB_API_KEY:}
+  hub-api-key: "${OL_HUB_API_KEY:}"
 deployment:
   test-url: http://localhost:3000
   test-backend-url: http://localhost:3000
