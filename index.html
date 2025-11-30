@@ -98,6 +98,36 @@
             color: var(--ol-primary);
         }
         
+        /* Status Counter */
+        .status-counter {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--mdc-on-surface-variant);
+            padding: 0.25rem 0.75rem;
+            background: var(--mdc-background);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .status-counter.loading {
+            color: var(--mdc-on-surface-variant);
+        }
+        
+        .status-counter.ready {
+            color: var(--ol-primary);
+        }
+        
+        .status-counter .material-icons {
+            font-size: 16px;
+        }
+        
+        .status-counter.loading .material-icons {
+            animation: rotate 1s linear infinite;
+        }
+        
         /* Refresh Button */
         .refresh-button {
             background-color: var(--mdc-primary);
@@ -584,6 +614,10 @@
                     <li><a href="https://forum.community.openlegacy.com/" target="_blank">Forum</a></li>
                 </ul>
             </nav>
+            <div class="status-counter loading" id="status-counter">
+                <span class="material-icons">hourglass_empty</span>
+                <span id="status-text">Loading...</span>
+            </div>
             <button class="refresh-button" id="refresh-button" title="Refresh service status">
                 <span class="material-icons">refresh</span>
                 <span>Refresh</span>
@@ -820,6 +854,61 @@
         document.addEventListener('DOMContentLoaded', function() {
             const cards = document.querySelectorAll('.tool-card');
             const disabledCards = new Map(); // Store disabled cards with their URLs for polling
+            const statusCounter = document.getElementById('status-counter');
+            const statusText = document.getElementById('status-text');
+            const TOTAL_SERVICES = 7; // Total number of services to check
+            
+            // Track which services have been checked
+            const checkedServices = new Set();
+            
+            // Function to update status counter
+            function updateStatusCounter() {
+                let availableCount = 0;
+                
+                // Count all localhost services that are available and have been checked
+                cards.forEach(card => {
+                    const mainLink = card.querySelector('.learn-more');
+                    if (mainLink) {
+                        const url = mainLink.getAttribute('href');
+                        // Only count localhost services (skip external URLs)
+                        if (url.includes('localhost') || url.startsWith('http://localhost') || url.startsWith('https://localhost')) {
+                            // Only count if this service has been checked
+                            if (checkedServices.has(url)) {
+                                if (!card.classList.contains('disabled')) {
+                                    availableCount++;
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                const totalChecked = checkedServices.size;
+                
+                // Update the display
+                if (statusCounter.classList.contains('loading')) {
+                    // Still loading, show count based on checked services
+                    statusText.textContent = `${availableCount}/${TOTAL_SERVICES}`;
+                    if (totalChecked === TOTAL_SERVICES) {
+                        statusCounter.classList.remove('loading');
+                        if (availableCount === TOTAL_SERVICES) {
+                            statusCounter.classList.add('ready');
+                            statusCounter.querySelector('.material-icons').textContent = 'check_circle';
+                        } else {
+                            statusCounter.querySelector('.material-icons').textContent = 'hourglass_empty';
+                        }
+                    }
+                } else {
+                    // Already loaded, just update count
+                    statusText.textContent = `${availableCount}/${TOTAL_SERVICES}`;
+                    if (availableCount === TOTAL_SERVICES) {
+                        statusCounter.classList.add('ready');
+                        statusCounter.querySelector('.material-icons').textContent = 'check_circle';
+                    } else {
+                        statusCounter.classList.remove('ready');
+                        statusCounter.querySelector('.material-icons').textContent = 'hourglass_empty';
+                    }
+                }
+            }
             
             // Function to refresh all services
             async function refreshAllServices() {
@@ -842,6 +931,10 @@
                         
                         // Check health
                         const isHealthy = await checkServiceHealth(url);
+                        
+                        // Mark this service as checked
+                        checkedServices.add(url);
+                        
                         const wasDisabled = card.classList.contains('disabled');
                         
                         if (!isHealthy) {
@@ -860,32 +953,43 @@
                 // Remove refreshing animation
                 refreshButton.classList.remove('refreshing');
                 refreshButton.disabled = false;
+                
+                // Update status counter
+                updateStatusCounter();
             }
             
             // Initial health check for all cards
-            cards.forEach(async (card) => {
-                const mainLink = card.querySelector('.learn-more');
-                if (mainLink) {
-                    const url = mainLink.getAttribute('href');
-                    
-                    // Skip external URLs (non-localhost)
-                    if (!url.includes('localhost') && !url.startsWith('http://localhost') && !url.startsWith('https://localhost')) {
-                        // External URLs are assumed available - enable them
-                        enableCard(card, url);
-                        return;
-                    }
-                    
-                    // Check health
-                    const isHealthy = await checkServiceHealth(url);
-                    
-                    if (!isHealthy) {
-                        disableCard(card);
-                        disabledCards.set(card, url);
-                    } else {
-                        enableCard(card, url);
+            (async () => {
+                for (const card of cards) {
+                    const mainLink = card.querySelector('.learn-more');
+                    if (mainLink) {
+                        const url = mainLink.getAttribute('href');
+                        
+                        // Skip external URLs (non-localhost)
+                        if (!url.includes('localhost') && !url.startsWith('http://localhost') && !url.startsWith('https://localhost')) {
+                            // External URLs are assumed available - enable them
+                            enableCard(card, url);
+                            continue;
+                        }
+                        
+                        // Check health
+                        const isHealthy = await checkServiceHealth(url);
+                        
+                        // Mark this service as checked
+                        checkedServices.add(url);
+                        
+                        if (!isHealthy) {
+                            disableCard(card);
+                            disabledCards.set(card, url);
+                        } else {
+                            enableCard(card, url);
+                        }
+                        
+                        // Update status counter after each check
+                        updateStatusCounter();
                     }
                 }
-            });
+            })();
             
             // Poll disabled cards every 5 seconds
             setInterval(async () => {
@@ -896,6 +1000,7 @@
                         // Service is now available - enable the card and show notification
                         enableCard(card, url, true);
                         disabledCards.delete(card);
+                        updateStatusCounter();
                     }
                 }
             }, 5000);

@@ -27,7 +27,7 @@ for arg in "$@"; do
     WITH_HUB=true
     WITH_AI=true
     PROFILE_ARG="--profile all-ai"
-    OL_HUB_IMAGE="lighthub-ai:latest"
+    OL_HUB_IMAGE="openlegacy/hub-enterprise-light:ai"
     break
   fi
 done
