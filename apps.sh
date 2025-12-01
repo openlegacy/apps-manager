@@ -62,19 +62,19 @@ save_hub_api_key_to_config() {
 # Function to prompt for OL_HUB_API_KEY if needed
 prompt_hub_api_key() {
   if [ "$WITH_HUB" = true ]; then
-    # Show current API key
+    # Skip prompting if API key is already set
     if [ -n "$OL_HUB_API_KEY" ]; then
-      echo "Current OL_HUB_API_KEY: $OL_HUB_API_KEY"
-      echo -n "Please enter your Hub API Key (press Enter to keep current): "
-    else
-      echo "Current OL_HUB_API_KEY: (not set)"
-      echo ""
-      echo "Note: If this is your first execution, you can skip this step by pressing Enter."
-      echo "      After the services start, go to Hub URL at http://localhost:8080 to get an API key,"
-      echo "      then stop and start the apps.sh script again."
-      echo ""
-      echo -n "Please enter your Hub API Key (press Enter to skip on first execution): "
+      return
     fi
+    
+    # Show current API key (should be empty at this point)
+    echo "Current OL_HUB_API_KEY: (not set)"
+    echo ""
+    echo "Note: If this is your first execution, you can skip this step by pressing Enter."
+    echo "      After the services start, go to Hub URL at http://localhost:8080 to get an API key,"
+    echo "      then stop and start the apps.sh script again."
+    echo ""
+    echo -n "Please enter your Hub API Key (press Enter to skip on first execution): "
     read -r new_api_key
     
     # Use new value if provided, otherwise keep current
@@ -83,7 +83,7 @@ prompt_hub_api_key() {
       export OL_HUB_API_KEY
       # Always save to config.env when a new value is provided
       save_hub_api_key_to_config
-    elif [ -z "$OL_HUB_API_KEY" ]; then
+    else
       echo "Skipping Hub API Key setup. Remember to get your API key from http://localhost:8080 and restart the script."
     fi
   fi

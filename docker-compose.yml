@@ -144,10 +144,10 @@ services:
       - all
       - all-ai
 
-volumes:
-  hub-postgres-data:
-
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  hub-postgres-data:
 

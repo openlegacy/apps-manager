@@ -616,7 +616,7 @@
             </nav>
             <div class="status-counter loading" id="status-counter">
                 <span class="material-icons">hourglass_empty</span>
-                <span id="status-text">Loading...</span>
+                <span id="status-text">Checking services... 0/7</span>
             </div>
             <button class="refresh-button" id="refresh-button" title="Refresh service status">
                 <span class="material-icons">refresh</span>
@@ -886,8 +886,8 @@
                 
                 // Update the display
                 if (statusCounter.classList.contains('loading')) {
-                    // Still loading, show count based on checked services
-                    statusText.textContent = `${availableCount}/${TOTAL_SERVICES}`;
+                    // Still loading, show loading message with count
+                    statusText.textContent = `Checking services... ${availableCount}/${TOTAL_SERVICES}`;
                     if (totalChecked === TOTAL_SERVICES) {
                         statusCounter.classList.remove('loading');
                         if (availableCount === TOTAL_SERVICES) {
@@ -896,6 +896,8 @@
                         } else {
                             statusCounter.querySelector('.material-icons').textContent = 'hourglass_empty';
                         }
+                        // Show final count without loading message
+                        statusText.textContent = `${availableCount}/${TOTAL_SERVICES}`;
                     }
                 } else {
                     // Already loaded, just update count
@@ -914,9 +916,11 @@
             async function refreshAllServices() {
                 const refreshButton = document.getElementById('refresh-button');
                 
-                // Add refreshing animation
+                // Add refreshing animation and show loading state
                 refreshButton.classList.add('refreshing');
                 refreshButton.disabled = true;
+                statusCounter.classList.add('loading');
+                checkedServices.clear(); // Reset checked services for accurate loading display
                 
                 // Check all cards
                 for (const card of cards) {
@@ -947,6 +951,9 @@
                                 disabledCards.delete(card);
                             }
                         }
+                        
+                        // Update status counter after each check
+                        updateStatusCounter();
                     }
                 }
                 
@@ -954,7 +961,7 @@
                 refreshButton.classList.remove('refreshing');
                 refreshButton.disabled = false;
                 
-                // Update status counter
+                // Final update status counter (will remove loading class if all checked)
                 updateStatusCounter();
             }
             

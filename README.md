@@ -228,6 +228,20 @@ docker-compose --profile all down -v  # ⚠️ This deletes PostgreSQL data!
 rm -rf .ol-terminal .olcode .sqol .termiq .appiq  # Remove local configurations
 ```
 
+**To reset PostgreSQL database data:**
+```bash
+# Stop the containers
+docker-compose down
+
+# Remove the specific volume
+docker volume rm apps-manager_hub-postgres-data
+
+# Start again (volume will be recreated automatically)
+docker-compose up -d
+```
+
+> 💡 **Note:** The volume name will be prefixed with your project directory name (e.g., `apps-manager_hub-postgres-data`). To see all volumes, use `docker volume ls`. To see the exact volume name for your project, use `docker-compose config --volumes`.
+
 ## 🔧 Troubleshooting
 
 ### License Error
